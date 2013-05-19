@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="description" content="Java Date / Time API vs Joda"/>
+    <title>It's JODA time!</title>
+
+    <meta name="author" content="Alexamdru Burghelea"/>
+    <meta name="viewport" content="width=1024, user-scalable=no">
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet'
+          type='text/css'>
+
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/print.css" type="text/css" media="print">
+
+    <link rel="stylesheet" href="lib/zenburn.css">
+</head>
+
+<body>
+
+<div class="reveal">
+
+<!-- Used to fade in a background when a specific slide state is reached -->
+<div class="state-background"></div>
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<div class="slides">
+<section>
+    <h1>It's JODA Time</h1>
+
+    <h3 class="members">
+        Alexandru Burghelea @ Teamnet
+    </h3>
+    <script>
+        // Delicously hacky. Look away.
+        if (navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/i)) document.write('<p style="color: rgba(0,0,0,0.3); text-shadow: none;">(' + 'Tap to navigate' + ')</p>');
+    </script>
+</section>
+
+
+<section>
+    <h2>De ce <a href="http://joda.sourceforge.net/" target="_blank">JODA</a> Time?</h2>
+
+    <div class="fragment">
+        <blockquote title="http://joda.sourceforge.net/" cite="http://joda.sourceforge.net/">
+            Joda-Time reprezintă standardul "de facto" pentru manipularea avansată a conceptului de dată şi timp
+            in Java. Atat Date cât şi Calendar din Java API au defecte serioase, şi acest proiect îşi propune să
+            le corecteze.
+        </blockquote>
+        <p>
+            ... cel puţin aşa zic ei.
+        </p>
+    </div>
+</section>
+<section class="stack">
+    <section>
+        <h2>Hai să vedem</h2>
+
+        <p>
+            Vrem data de 21 Sept 2012, ora 16:49
+        </p>
+
+            <pre><code contenteditable="false" style="font-size: 18px; margin-top: 20px;">
+public String getIncorectSpecificTimeInBruxelles(){
+    Date secondOfFebruary = new Date(2012, 9, 21, 16, 49);
+
+    TimeZone zone = TimeZone.getTimeZone("Europe/Bruxelles");
+    Calendar calendar = new GregorianCalendar(secondOfFebruary, zone);
+    DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyy HH:mm");
+
+    return dateFormat.format(calendar);
+}
+            </code></pre>
+
+        <div class="fragment">
+            Câte probleme identificaţi ?
+        </div>
+    </section>
+
+    <section>
+        <h2>Destule</h2>
+
+        <p>
+            Sunt 6 probleme în 5 rânduri
+        </p>
+
+        <div class="fragment">
+            <strong>new Date()</strong>
+            <ul>
+                <li>Anul ar trebui sa fie relativ la 1900 => deci 112</li>
+                <li>Lunile sunt indexate de la 0 => 9 == Octombrie</li>
+                <li>E deprecated (but not the point now)</li>
+            </ul>
+        </div>
+        <br/>
+
+        <div class="fragment">
+            <strong>TimeZone</strong>
+            <ul>
+                <li> Bruxelles e capitala Belgiei, timezone-ul e Brussels</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Mai avem</h2>
+
+        <div class="fragment">
+            <strong>new Calendar(..)</strong>
+            <ul>
+                <li>
+                    Constructorul nu primeşte un date, doar un timezone
+                </li>
+                <li>
+                    Trebuie apelat setTime(date) după iniţializare
+                </li>
+            </ul>
+        </div>
+        <br/>
+
+        <div class="fragment">
+            <strong>.format(..)</strong>
+            <ul>
+                <li>
+                    RuntimeException: Format nu primeşte o instantă de calendar, ci un Date
+                </li>
+                <li>
+                    ... aşadar uită şi timezone-ul, deci trebuie setat explicit
+                </li>
+                <li>
+                    Nu e thread-safe
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Cam aşa ar trebui să arate</h2>
+                <pre><code contenteditable="false" style="font-size: 18px; margin-top: 20px;">
+public String getSpecificTimeInBruxelles(){
+
+    int currentYear = 2012 - 1900;
+    int sept = 8; //Calendar.SEPTEMBER;
+    int today = 21;
+    Date secondOfFebruary = new Date(currentYear, sept, today, 16, 49);
+    TimeZone zone = TimeZone.getTimeZone("Europe/Brussels");
+
+    Calendar calendar = new GregorianCalendar(zone);
+    calendar.setTime(secondOfFebruary);
+
+    DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyy HH:mm");
+    dateFormat.setTimeZone(zone);
+    return dateFormat.format(calendar.getTime());
+}
+                </code></pre>
+    </section>
+</section>
+<section>
+    <h2>Despre Joda Time</h2>
+
+    <ul>
+        <li>
+            Autor: Stephen Colebourne,Brian O'Neill şi alţi 18 contribuitori
+            <ul>
+                <li> Colebourne este unul dintre responsabilii pentru specificaţiile <a
+                        href="http://jcp.org/en/jsr/detail?id=310" target="_blank">JSR-310</a></li>
+            </ul>
+        </li>
+        <li>
+            Este uşor de folosit şi de extins
+        </li>
+        <li>
+            TimeZone-urile sunt  actualize frecvent conform <a href="http://www.iana.org/time-zones"
+                                                             target="_blank">Iana tz database</a>
+        </li>
+        <li>
+            Imutabilitate (deşi pune la dispoziţie şi Mutable*.java)
+        </li>
+        <li>
+            A fost făcut să fie uşor de convertit intre Java Api şi Joda
+            <ul>
+                <li>ca bonus există şi <a href="http://joda-time.sourceforge.net/contrib/hibernate/index.html"
+                                          target="_blank">Joda Time Hibernate</a></li>
+            </ul>
+        </li>
+        <li>
+            Este open-source (no license mambo-jambo)
+        </li>
+        <li>
+            Matur şi foarte bine testat (<a href="http://joda-time.sourceforge.net/surefire-report.html"
+                                            target="_blank">3888 de teste</a> ).
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2>Concepte cheie</h2>
+    <ul>
+        <li>
+            Instant : definit ca un moment in continuumul dată-timp (reprezentat ca numărul de secunde de la
+            01-01-1970T00:00:00)
+            <ul>
+                <li>consistent cu definiţia din java.util.(Date|Calendar)</li>
+            </ul>
+        </li>
+        <li>
+            Partial : reprezentare parţială a unei date ŞI/SAU timp
+            <ul>
+                <li>LocalDate, LocalTime</li>
+                <li>YearMonth, MonthDay</li>
+            </ul>
+        </li>
+        <li>
+            Interval, Duration, Period ( care-i diferenţa ? )
+        </li>
+        <li>
+            Chronology : sistem de calendare (extensibil prin extinderea java.util.Calendar)
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2>Intuitivitate</h2>
+
+    <p>Clasele au proprietăţi sugestive (relativ).</p>
+    <img src="images/joda-fields.png"/>
+</section>
+
+<section>
+    <h2>
+        Sa vedem şi mici exemple
+    </h2>
+
+    <div class="fragment">
+        <blockquote cite="source file">JodaExamples.java</blockquote>
+    </div>
+    <br/>
+
+    <div class="fragment">
+        <blockquote>Provocarea lui Gerard: Numărătorul de zile lucratoare</blockquote>
+    </div>
+</section>
+
+<section>
+    <h2>
+        Viitorul "Timpului"
+    </h2>
+
+    <p>
+        De ce mai există JSR-310 când există Joda Time?
+    </p>
+
+    <div class="fragment">
+        <blockquote title="Stephen Colebourne" cite="http://blog.joda.org/2009/11/why-jsr-310-isn-joda-time_4941.html">
+            Well, there is one key reason - Joda-Time has design flaws.
+        </blockquote>
+    </div>
+    <br/>
+
+    <div class="fragment">
+        <blockquote title="Stephen Colebourne" cite="http://blog.joda.org/2009/11/why-jsr-310-isn-joda-time_4941.html">
+            Joda-Time isn't broken!
+        </blockquote>
+    </div>
+    <div class="fragment">
+        Mai multe pe <a href="http://blog.joda.org/2009/11/why-jsr-310-isn-joda-time_4941.html">blogul lui
+        Jodastephen</a>
+    </div>
+</section>
+
+<section>
+    <h2>
+        Credits
+    </h2>
+    <ol>
+        <li>
+            <a href="http://joda-time.sourceforge.net/userguide.html">UserGuide-ul Joda Time</a>
+        </li>
+        <li>
+            <a href="http://www.parleys.com/#st=5&id=100&sl=1">1h Video About JSR-310</a>
+        </li>
+        <li>
+            <a href="http://technology.amis.nl/2009/06/16/introducing-joda-time-the-smart-date-api/">Amis Technology</a>
+        </li>
+        <li>
+            <a href="http://www.kodejava.org/examples/866.html">Kodejava</a>
+        </li>
+        <li>
+            <a href="http://javainfoseek.blogspot.ro/2010/03/joda-time-java-date-and-time-api.html">Sharing Thoughts</a>
+        </li>
+
+    </ol>
+</section>
+</div>
+
+<!-- The navigational controls UI -->
+<aside class="controls">
+    <a class="left" href="#">&#x25C4;</a>
+    <a class="right" href="#">&#x25BA;</a>
+    <a class="up" href="#">&#x25B2;</a>
+    <a class="down" href="#">&#x25BC;</a>
+</aside>
+
+<!-- Displays presentation progress, max value changes via JS to reflect # of slides -->
+<div class="progress"><span></span></div>
+
+</div>
+
+<!-- Optional libraries for code syntax highlighting and classList support in IE9 -->
+<script src="lib/highlight.js"></script>
+<script src="lib/classList.js"></script>
+<script src="js/reveal.min.js"></script>
+
+<script>
+    // Parse the query string into a key/value object
+    var query = {};
+    location.search.replace(/[A-Z0-9]+?=(\w*)/gi, function (a) {
+        query[ a.split('=').shift() ] = a.split('=').pop();
+    });
+
+    Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls:true,
+
+        // Display a presentation progress bar
+        progress:true,
+
+        // If true; each slide will be pushed to the browser history
+        history:true,
+
+        // Loops the presentation, defaults to false
+        loop:false,
+
+        // Flags if mouse wheel navigation should be enabled
+        mouseWheel:true,
+
+        // Apply a 3D roll to links on hover
+        rollingLinks:true,
+
+        // UI style
+        theme:query.theme || 'default', // default/neon
+
+        // Transition style
+        transition:query.transition || 'default' // default/cube/page/concave/linear(2d)
+    });
+
+    hljs.initHighlightingOnLoad();
+</script>
+
+</body>
+</html>
