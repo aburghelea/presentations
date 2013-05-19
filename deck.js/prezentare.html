@@ -54,30 +54,30 @@
 <header>
     <nav>
         <h1>
-            <a href="#title-slide">
-                <span class="edgel" >&lt;</span>
+            <a href="#titlu">
+                <span class="edgel">&lt;</span>
                 Web<span class="graydev">Dev</span>
-                <span class="edger" >
+                <span class="edger">
                     &gt;</span>
             </a>
         </h1>
 
         <div class="theme-menu">
-            <label for="style-themes">Style Theme:</label>
+            <label for="style-themes">Stil:</label>
             <select id="style-themes">
                 <option selected="selected" value="web-app/themes/style/web-2.0.css">Web 2.0</option>
                 <option value="web-app/themes/style/swiss.css">Swiss</option>
                 <option value="web-app/themes/style/neon.css">Neon</option>
-                <option value="">None</option>
+                <option value="">Nimic</option>
             </select>
 
-            <label for="transition-themes">Transition Theme:</label>
+            <label for="transition-themes">Tranzitie:</label>
             <select id="transition-themes">
-                <option selected="selected" value="web-app/themes/transition/horizontal-slide.css">Horizontal Slide
+                <option selected="selected" value="web-app/themes/transition/horizontal-slide.css">Orizontal
                 </option>
-                <option value="web-app/themes/transition/vertical-slide.css">Vertical Slide</option>
+                <option value="web-app/themes/transition/vertical-slide.css">Vertical</option>
                 <option value="web-app/themes/transition/fade.css">Fade</option>
-                <option value="">None</option>
+                <option value="">Nimic</option>
             </select>
         </div>
     </nav>
@@ -85,7 +85,7 @@
 
 <article class=deck-container on-slide-0 on-slide-title-slide>
 
-<section class="slide deck-current" id="title-slide">
+<section class="slide deck-current" id="titlu">
     <h1>Protocolul HTTP</h1>
 
     <div class="members">
@@ -97,11 +97,11 @@
 <section class="slide deck-next" id="cuprins">
     <h2>Cuprins</h2>
     <ul>
-        <li id="no-1">
+        <li id="cuprins-1">
             Scurtă istorie
         </li>
 
-        <li id="no-2">
+        <li id="cuprins-2">
             Descriere a protocolului
             <ul class="deck-child-current">
                 <li>
@@ -114,15 +114,15 @@
             </ul>
         </li>
 
-        <li id="no-3">
+        <li id="cuprins-3">
             Conținutul paginilor web
         </li>
 
-        <li id="no-4">
+        <li id="cuprins-4">
             Hands-on: discutăm cu servere
         </li>
 
-        <li id="no-5">
+        <li id="cuprins-5">
             Hands-on: implementăm cu servere
         </li>
     </ul>
@@ -200,19 +200,19 @@
     <h2>URL (adrese)</h2>
     <pre style="text-align: center"><code><strong>scheme://domain:port/path?query?#fragment</strong></code></pre>
     <ul>
-        <li>
+        <li id="url-1">
             <strong>Schemă</strong> <code>http, https, mailto, ftp</code>
         </li>
-        <li>
+        <li id="url-2">
             <strong>Domeniu</strong> (DNS)
         </li>
-        <li>
+        <li id="url-3">
             <strong>Port</strong> (default) 80
         </li>
-        <li>
+        <li id="url-4">
             <strong>Path</strong> (la fel ca la sistemul de fișiere)
         </li>
-        <li>
+        <li id="url-5">
             <strong>Query</strong> (perechi cheie-valoare)
             <ul>
                 <li>
@@ -235,7 +235,7 @@
 <section class="slide deck-after" id="request">
     <h2>Request</h2>
     <ul>
-        <li class="slide">
+        <li class="slide" id="request-1">
             <strong>Request line</strong>
             <ul>
                 <li>verbe safe (GET, HEAD)</li>
@@ -243,7 +243,7 @@
                 <li>undefined (POST)</li>
             </ul>
         </li>
-        <li class="slide">
+        <li class="slide" id="request-2">
             <strong>Headere</strong>
             <ul>
                 <li>
@@ -263,7 +263,7 @@
                 </li>
             </ul>
         </li>
-        <li class="slide">
+        <li class="slide" id="request-3">
             <strong>Request body</strong>
         </li>
     </ul>
@@ -273,22 +273,22 @@
     <h2>
         Request - exemple
     </h2>
-<pre>
-GET /story.html
-Connection: keep-alive
-</pre>
+    <pre>
+        GET /story.html
+        Connection: keep-alive
+    </pre>
 
-<pre>
-POST /buy_ticket
+    <pre>
+        POST /buy_ticket
 
-coloare=verde&parte=dreapta=etaj=2
-</pre>
+        coloare=verde&parte=dreapta=etaj=2
+    </pre>
 </section>
 
 <section class="slide deck-after" id="response">
     <h2>Response</h2>
     <ul>
-        <li class="slide">
+        <li class="slide" id="response-1">
             <strong>Status line</strong>
             <ul>
                 <li> 1xx: speciale</li>
@@ -298,7 +298,7 @@ coloare=verde&parte=dreapta=etaj=2
                 <li> 5xx: server error</li>
             </ul>
         </li>
-        <li class="slide">
+        <li class="slide" id="response-2">
             <strong>Headere</strong>
             <ul>
                 <li>Content-Type (text/plain, image/png, text.html; charset=utf-8)</li>
@@ -309,7 +309,7 @@ coloare=verde&parte=dreapta=etaj=2
                 <li>Set-Cookie</li>
             </ul>
         </li>
-        <li class="slide">
+        <li class="slide" id="response-3">
             <strong>Response body</strong>
         </li>
     </ul>
@@ -317,22 +317,22 @@ coloare=verde&parte=dreapta=etaj=2
 
 <section class="slide deck-after" id="response">
     <h2>Response - exemplu</h2>
-<pre><code>
-    HTTP/1.1 404 Not Found
-    Server: nginx/0.7.67
-    Date: Fri, 24 Feb 2012 23:52:26 GMT
-    Content-Type: text/html
-    Content-Length: 169
-    Connection: keep-alive
+    <pre><code>
+        HTTP/1.1 404 Not Found
+        Server: nginx/0.7.67
+        Date: Fri, 24 Feb 2012 23:52:26 GMT
+        Content-Type: text/html
+        Content-Length: 169
+        Connection: keep-alive
 
-    &lt;html&gt;
-    &lt;head&gt;&lt;title&gt;404 Not Found&lt;/title&gt;&lt;/head&gt;
-    &lt;body bgcolor="white"&gt;
-    &lt;center&gt;&lt;h1&gt;404 Not Found&lt;/h1&gt;&lt;/center&gt;
-    &lt;hr&gt;&lt;center&gt;nginx/0.7.67&lt;/center&gt;
-    &lt;/body&gt;
-    &lt;/html&gt;
-</code></pre>
+        &lt;html&gt;
+        &lt;head&gt;&lt;title&gt;404 Not Found&lt;/title&gt;&lt;/head&gt;
+        &lt;body bgcolor="white"&gt;
+        &lt;center&gt;&lt;h1&gt;404 Not Found&lt;/h1&gt;&lt;/center&gt;
+        &lt;hr&gt;&lt;center&gt;nginx/0.7.67&lt;/center&gt;
+        &lt;/body&gt;
+        &lt;/html&gt;
+    </code></pre>
 </section>
 
 <section class="slide deck-after" id="content">
