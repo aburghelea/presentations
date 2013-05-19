@@ -1,0 +1,11 @@
+.members {
+    position: fixed !important;
+    right: 20%;
+    bottom: 20%;
+}
+
+.right {
+    position: fixed !important;
+    right: 20%;
+    top: 20%;
+}
