@@ -367,7 +367,7 @@ body.deck-container {
   }
 
   .slide {
-    position: static !important;
+    position: relative !important;
     visibility: visible !important;
     display: block !important;
     -webkit-transform: none !important;
