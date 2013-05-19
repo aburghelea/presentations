@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="description" content="This is the presentation that Alex
+                                Morega held at WebDev, rewriten in deck.js"/>
+
+    <title>WebDev #1, Protocolul HTTP</title>
+
+    <meta name="author" content="Alex Morega"/>
+    <meta name="editor" content="Alex Burghelea"/>
+    <meta name="viewport" content="width=1024, user-scalable=no">
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet'
+          type='text/css'>
+
+
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/print.css" type="text/css" media="print">
+
+    <link rel="stylesheet" href="lib/zenburn.css">
+</head>
+
+<body>
+
+<div class="reveal">
+
+<!-- Used to fade in a background when a specific slide state is reached -->
+<div class="state-background"></div>
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<div class="slides">
+<section>
+    <h1>Protocolul HTTP</h1>
+
+    <h3 class="members">
+        Alex Morega
+    </h3>
+
+    <script>
+        // Delicously hacky. Look away.
+        if (navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/i)) document.write('<p style="color: rgba(0,0,0,0.3); text-shadow: none;">(' + 'Tap to navigate' + ')</p>');
+    </script>
+</section>
+
+<section>
+    <h2>Cuprins</h2>
+    <ul>
+        <li class="fragment">
+            Scurtă istorie
+        </li>
+
+        <li class="fragment">
+            Descriere a protocolului
+            <ul class="deck-child-current">
+                <li>
+                    client, server
+                </li>
+                <li>structura unui URL</li>
+                <li>verbe</li>
+                <li>response status</li>
+                <li>header</li>
+            </ul>
+        </li>
+
+        <li class="fragment">
+            Conținutul paginilor web
+        </li>
+
+        <li class="fragment">
+            <strong>Hands-on:</strong> discutăm cu servere
+        </li>
+
+        <li class="fragment">
+            <strong>Hands-on:</strong> implementăm un server
+        </li>
+    </ul>
+</section>
+
+<!-- Example of nested vertical slides -->
+<section>
+    <h2>De unde a plecat totul</h2>
+
+    <ul>
+        <li class="fragment" id="where-it-started-1">
+            <strong>1990:</strong> Prima implementare
+            <a class="image" href="http://en.wikipedia.org/wiki/Tim_Berners-Lee" target="_blank">
+                <img style="float: right;" src="images/timbl.jpg" title="Tim Berners-Lee" alt="TimBL">
+            </a>
+        </li>
+        <li class="fragment" id="where-it-started-2">
+            <strong>1993:</strong> Mosaic, browser grafic
+        </li>
+        <li class="fragment" id="where-it-started-3">
+            <strong>1994:</strong> fondarea W3C
+        </li>
+        <li class="fragment" id="where-it-started-4">
+            <strong>1995:</strong> Javascript
+        </li>
+        <li class="fragment" id="where-it-started-5">
+            <strong>1996:</strong> HTTP/1.1
+        </li>
+        <li class="fragment" id="where-it-started-6">
+            <strong>1997:</strong> HTML4
+        </li>
+        <li class="fragment" id="where-it-started-7">
+            <strong>1998:</strong> CSS2
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2>Schema protocolului</h2>
+    <ul>
+        <li> TCP, client, server</li>
+
+        <li> Request, Response</li>
+
+        <li> Proxy</li>
+
+        <li> Documente cu hyperlinkuri</li>
+    </ul>
+</section>
+
+<section>
+    <h2>URL (adrese)</h2>
+        <pre><code contenteditable style="font-size: 18px; margin-top: 20px;">
+            <strong>scheme://domain:port/path?query?#fragment</strong>
+        </code></pre>
+    <ul>
+        <li id="url-1">
+            <strong>Schemă</strong> <code>http, https, mailto, ftp</code>
+        </li>
+        <li id="url-2">
+            <strong>Domeniu</strong> (DNS)
+        </li>
+        <li id="url-3">
+            <strong>Port</strong> (default) 80
+        </li>
+        <li id="url-4">
+            <strong>Path</strong> (la fel ca la sistemul de fișiere)
+        </li>
+        <li id="url-5">
+            <strong>Query</strong> (perechi cheie-valoare)
+            <ul>
+                <li>
+                    ?culoare=verde
+                </li>
+                <li>
+                    ?culoare=verde&parte=dreapta&etaj=2
+                </li>
+                <li>
+                    ?culoare=ro%C8%99u
+                </li>
+            </ul>
+        </li>
+        <li>
+            <strong>Fragment</strong> (nu e trimis la server)
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2>Request</h2>
+    <ul>
+        <li class="fragment" id="request-1">
+            <strong>Request line</strong>
+            <ul>
+                <li>verbe safe (GET, HEAD)</li>
+                <li>idempotente (PUT, DELETE)</li>
+                <li>undefined (POST)</li>
+            </ul>
+        </li>
+        <li class="fragment" id="request-2">
+            <strong>Headere</strong>
+            <ul>
+                <li>
+                    User-Agent (Mozzilla/5.0[...] Chrome/17.0.963.56)
+                </li>
+                <li>
+                    Accept, Accept-Encoding, Accept-Language
+                </li>
+                <li>
+                    Connection
+                </li>
+                <li>
+                    Host (virtual hosting)
+                </li>
+                <li>
+                    Cookie
+                </li>
+            </ul>
+        </li>
+        <li class="fragment" id="request-3">
+            <strong>Request body</strong>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2>
+        Request - exemple
+    </h2>
+    <pre><code contenteditable style="font-size: 18px; margin-top: 20px;">
+        GET /story.html
+        Connection: keep-alive
+    </code></pre>
+
+    <pre><code>
+        POST /buy_ticket
+
+        coloare=verde&parte=dreapta=etaj=2
+    </code></pre>
+</section>
+
+<section>
+    <h2>Response</h2>
+    <ul style="font-size: 0.7em">
+        <li class="fragment" id="response-1">
+            <strong>Status line</strong>
+            <ul>
+                <li> 1xx: speciale</li>
+                <li> 2xx: succes</li>
+                <li> 3xx: redirect</li>
+                <li> 4xx: client error</li>
+                <li> 5xx: server error</li>
+            </ul>
+        </li>
+        <li class="fragment" id="response-2">
+            <strong>Headere</strong>
+            <ul>
+                <li>Content-Type (text/plain, image/png, text.html; charset=utf-8)</li>
+                <li>Content-Length (bytes)</li>
+                <li>Vary</li>
+                <li>Cache-Control</li>
+                <li>Etag</li>
+                <li>Set-Cookie</li>
+            </ul>
+        </li>
+        <li class="fragment" id="response-3">
+            <strong>Response body</strong>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2>Response - exemplu</h2>
+    <pre><code style="font-size: 18px; margin-top: 20px;">
+        HTTP/1.1 404 Not Found
+        Server: nginx/0.7.67
+        Date: Fri, 24 Feb 2012 23:52:26 GMT
+        Content-Type: text/html
+        Content-Length: 169
+        Connection: keep-alive
+
+        &lt;html&gt;
+        &lt;head&gt;&lt;title&gt;404 Not Found&lt;/title&gt;&lt;/head&gt;
+        &lt;body bgcolor="white"&gt;
+        &lt;center&gt;&lt;h1&gt;404 Not Found&lt;/h1&gt;&lt;/center&gt;
+        &lt;hr&gt;&lt;center&gt;nginx/0.7.67&lt;/center&gt;
+        &lt;/body&gt;
+        &lt;/html&gt;
+    </code></pre>
+</section>
+
+<section>
+    <h2>Conținut tipic</h2>
+    <ul>
+        <li>
+            Documente HTML
+        </li>
+        <li>
+            Styling CSS
+        </li>
+        <li>
+            Interacțiune JavaScript
+        </li>
+        <li>
+            Imagini, media
+        </li>
+        <li>
+            Linkuri intre resurse
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2>Linkuri, formulare</h2>
+    <pre><code style="font-size: 18px; margin-top: 20px;">
+
+        &lt;a href="http://www.rosedu.org"&gt;ROSEdu&lt;/a&gt;
+
+        &lt;img src="thumbs-up.png"&gt;
+
+        &lt;link rel="stylesheet" href="style.css"&gt;
+        &lt;link href="news.atom" rel="alternate" title="News feed" type="application/atom+xml"&gt;
+
+        &lt;script src="modernizr.js"&gt;&lt;/script&gt;
+
+        &lt;form method="post" action="register_me"&gt;
+        &nbsp;&nbsp;&lt;!-- fields --&gt;
+        &lt;/form&gt;<br>
+
+        &lt;input name="first_name" required&gt;
+    </code></pre>
+</section>
+
+</div>
+
+<!-- The navigational controls UI -->
+<aside class="controls">
+    <a class="left" href="#">&#x25C4;</a>
+    <a class="right" href="#">&#x25BA;</a>
+    <a class="up" href="#">&#x25B2;</a>
+    <a class="down" href="#">&#x25BC;</a>
+</aside>
+
+<!-- Displays presentation progress, max value changes via JS to reflect # of slides -->
+<div class="progress"><span></span></div>
+
+</div>
+
+<!-- Optional libraries for code syntax highlighting and classList support in IE9 -->
+<script src="lib/highlight.js"></script>
+<script src="lib/classList.js"></script>
+
+<script src="js/reveal.js"></script>
+
+<script>
+    // Parse the query string into a key/value object
+    var query = {};
+    location.search.replace(/[A-Z0-9]+?=(\w*)/gi, function (a) {
+        query[ a.split('=').shift() ] = a.split('=').pop();
+    });
+
+    Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls:true,
+
+        // Display a presentation progress bar
+        progress:true,
+
+        // If true; each slide will be pushed to the browser history
+        history:true,
+
+        // Loops the presentation, defaults to false
+        loop:false,
+
+        // Flags if mouse wheel navigation should be enabled
+        mouseWheel:true,
+
+        // Apply a 3D roll to links on hover
+        rollingLinks:true,
+
+        // UI style
+        theme:query.theme || 'default', // default/neon
+
+        // Transition style
+        transition:query.transition || 'default' // default/cube/page/concave/linear(2d)
+    });
+
+    hljs.initHighlightingOnLoad();
+</script>
+
+</body>
+</html>
